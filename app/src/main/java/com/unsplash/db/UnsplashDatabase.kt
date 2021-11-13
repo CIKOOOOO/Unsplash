@@ -17,22 +17,4 @@ abstract class UnsplashDatabase : RoomDatabase() {
     abstract fun unsplashDao(): UnsplashDao
     abstract fun remoteKeysDao(): RemoteKeysDao
 
-    companion object {
-
-        @Volatile
-        private var INSTANCE: UnsplashDatabase? = null
-
-        fun getInstance(context: Context): UnsplashDatabase =
-            INSTANCE ?: synchronized(this) {
-                INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
-            }
-
-        private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(
-                context.applicationContext,
-                UnsplashDatabase::class.java, "Unsplash.db"
-            ).build()
-
-    }
-
 }

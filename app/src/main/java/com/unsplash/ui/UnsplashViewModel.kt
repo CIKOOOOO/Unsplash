@@ -7,10 +7,13 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.unsplash.data.UnsplashRepository
 import com.unsplash.model.Unsplash
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UnsplashViewModel(
+@HiltViewModel
+class UnsplashViewModel @Inject constructor(
     private val repository: UnsplashRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {

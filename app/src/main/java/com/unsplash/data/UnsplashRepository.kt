@@ -5,13 +5,14 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.unsplash.api.UnsplashService
+import com.unsplash.api.ApiService
 import com.unsplash.db.UnsplashDatabase
 import com.unsplash.model.Unsplash
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class UnsplashRepository(
-    private val service: UnsplashService,
+class UnsplashRepository @Inject constructor(
+    private val service: ApiService,
     private val database: UnsplashDatabase
 ) {
     fun getSearchResultStream(query: String): Flow<PagingData<Unsplash>> {

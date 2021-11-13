@@ -6,21 +6,22 @@ import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.unsplash.api.IN_QUALIFIER
-import com.unsplash.api.UnsplashService
+import com.unsplash.api.ApiService
 import com.unsplash.db.RemoteKeys
 import com.unsplash.db.UnsplashDatabase
+import com.unsplash.di.NetworkModule.IN_QUALIFIER
 import com.unsplash.model.Unsplash
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
 // GitHub page API is 1 based: https://developer.github.com/v3/#pagination
 private const val GITHUB_STARTING_PAGE_INDEX = 1
 
 @OptIn(ExperimentalPagingApi::class)
-class GithubRemoteMediator(
+class GithubRemoteMediator @Inject constructor(
     private val query: String,
-    private val service: UnsplashService,
+    private val service: ApiService,
     private val repoDatabase: UnsplashDatabase
 ) : RemoteMediator<Int, Unsplash>() {
 

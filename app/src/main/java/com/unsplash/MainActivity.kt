@@ -6,8 +6,10 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import dagger.hilt.android.AndroidEntryPoint
 import java.security.AccessControlContext
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     lateinit var navHostFragment: NavHostFragment

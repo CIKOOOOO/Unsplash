@@ -1,30 +1,28 @@
 package com.unsplash.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.unsplash.Injection
-import com.unsplash.R
 import com.unsplash.databinding.FragmentUnsplashBinding
 import com.unsplash.model.Unsplash
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class UnsplashFragment : Fragment() {
 
     private lateinit var binding: FragmentUnsplashBinding
-    private lateinit var viewModel: UnsplashViewModel
+    private val viewModel: UnsplashViewModel by viewModels()
 
     private lateinit var decorator: DividerItemDecoration
 
@@ -35,10 +33,10 @@ class UnsplashFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentUnsplashBinding.inflate(inflater, container, false)
 
-        viewModel = ViewModelProvider(
-            requireActivity(),
-            Injection.provideViewModelFactory(context = requireActivity(), owner = this)
-        ).get(UnsplashViewModel::class.java)
+//        viewModel = ViewModelProvider(
+//            requireActivity(),
+//            Injection.provideViewModelFactory(context = requireActivity(), owner = this)
+//        ).get(UnsplashViewModel::class.java)
 
         decorator = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         binding.rvUnsplash.addItemDecoration(decorator)
