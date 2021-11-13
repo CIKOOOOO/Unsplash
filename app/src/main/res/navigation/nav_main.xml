@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
     app:startDestination="@id/unsplashFragment">
 
     <fragment
         android:id="@+id/unsplashFragment"
         android:name="com.unsplash.ui.UnsplashFragment"
-        android:label="fragment_unsplash"/>
+        android:label="fragment_unsplash">
+        <action
+            android:id="@+id/action_unsplashFragment_to_unsplashDetailFragment"
+            app:destination="@id/unsplashDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/unsplashDetailFragment"
+        android:name="com.unsplash.ui.detail.UnsplashDetailFragment"
+        android:label="fragment_unsplash_detail"
+        tools:layout="@layout/fragment_unsplash_detail" />
 </navigation>

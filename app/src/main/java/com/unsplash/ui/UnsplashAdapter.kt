@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.unsplash.model.Unsplash
+import com.unsplash.navigation.Navigate
+import javax.inject.Inject
 
-class UnsplashAdapter : PagingDataAdapter<Unsplash, UnsplashViewHolder>(UNSPLASH_COMPARATOR) {
+class UnsplashAdapter constructor(private var navigate: Navigate) : PagingDataAdapter<Unsplash, UnsplashViewHolder>(UNSPLASH_COMPARATOR) {
 
     companion object {
         private val UNSPLASH_COMPARATOR = object : DiffUtil.ItemCallback<Unsplash>() {
@@ -22,11 +24,10 @@ class UnsplashAdapter : PagingDataAdapter<Unsplash, UnsplashViewHolder>(UNSPLASH
 
     override fun onBindViewHolder(holder: UnsplashViewHolder, position: Int) {
         val unsplashItem = getItem(position)
-        Log.e("asd", "${position}")
         if (unsplashItem != null)
             holder.bind(unsplashItem)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UnsplashViewHolder =
-        UnsplashViewHolder.create(parent)
+        UnsplashViewHolder.create(parent, navigate)
 }
