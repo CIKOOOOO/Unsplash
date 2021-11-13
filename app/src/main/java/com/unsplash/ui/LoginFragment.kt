@@ -68,7 +68,7 @@ class LoginFragment : Fragment() {
 
             val status = loginViewModel.login(userName,password)
             if (status == "success") {
-//                goToListPage()
+                goToListPage()
             } else {
                 AlertDialog.Builder(requireActivity()).setTitle("Error")
                     .setMessage(status)

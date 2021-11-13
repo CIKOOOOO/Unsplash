@@ -2,10 +2,13 @@ package com.unsplash
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import com.unsplash.ui.UnsplashFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.security.AccessControlContext
 
