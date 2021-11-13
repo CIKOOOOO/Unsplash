@@ -1,8 +1,7 @@
 package com.unsplash.api
 
 import com.unsplash.di.NetworkModule.CLIENT_ID
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ApiService {
 
@@ -11,4 +10,9 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("per_page") per_page: Int
     ): SplashSearchResponse
+
+    @Headers("X-API-KEY: 454041184B0240FBA3AACD15A1F7A8BB")
+    @POST("api/user/login")
+    @FormUrlEncoded
+    suspend fun loginService(@Url string: String, @FieldMap param: Map<String,String>)
 }

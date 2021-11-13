@@ -17,6 +17,7 @@ object NetworkModule {
 
     const val IN_QUALIFIER = "in:name,description"
     const val CLIENT_ID = "SUSLoy_msUHkDJoslVxAu3RHW09VTfWPi92ROdsO0rE"
+    const val LOGIN_URL = "https://talentpool.oneindonesia.id/"
 
     @Provides
     @Singleton
