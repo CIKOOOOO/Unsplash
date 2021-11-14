@@ -8,14 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.unsplash.R
 import com.unsplash.databinding.FragmentLoginBinding
 import com.unsplash.databinding.FragmentUnsplashBinding
+import com.unsplash.utils.SharedPreferenceUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -24,6 +27,9 @@ class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private val loginViewModel : LoginViewModel by viewModels()
 
+    @Inject
+    lateinit var sharedPref: SharedPreferenceUtil
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +37,7 @@ class LoginFragment : Fragment() {
     ): View? {
         binding = FragmentLoginBinding.inflate(inflater,container,false)
         // Inflate the layout for this fragment
+
         return binding.root
     }
 
@@ -50,7 +57,12 @@ class LoginFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        var sharedPref = sharedPref.getString("token","tidak ada token")
+        Log.d("GLG sharedpref login",sharedPref.toString())
 
+    }
 
     private fun login(userName: String, password: String){
         val mainActivityJob = Job()

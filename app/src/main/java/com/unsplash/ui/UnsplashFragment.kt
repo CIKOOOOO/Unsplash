@@ -4,19 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.unsplash.R
 import com.unsplash.databinding.FragmentUnsplashBinding
 import com.unsplash.model.Unsplash
+import com.unsplash.utils.SharedPreferenceUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class UnsplashFragment : Fragment() {
@@ -24,7 +30,11 @@ class UnsplashFragment : Fragment() {
     private lateinit var binding: FragmentUnsplashBinding
     private val viewModel: UnsplashViewModel by viewModels()
 
+    @Inject lateinit var sharedPref: SharedPreferenceUtil
+
     private lateinit var decorator: DividerItemDecoration
+
+    private var isSuccessClearSharedPref = true;
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,10 +43,15 @@ class UnsplashFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentUnsplashBinding.inflate(inflater, container, false)
 
-//        viewModel = ViewModelProvider(
-//            requireActivity(),
-//            Injection.provideViewModelFactory(context = requireActivity(), owner = this)
-//        ).get(UnsplashViewModel::class.java)
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            requireActivity(),
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    logout()
+                }
+            }
+        )
 
         decorator = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         binding.rvUnsplash.addItemDecoration(decorator)
@@ -49,6 +64,50 @@ class UnsplashFragment : Fragment() {
         )
 
         return binding.root
+    }
+
+    private fun logout(){
+        try {
+            sharedPref.clearPref()
+        } catch (e: Exception){
+            isSuccessClearSharedPref = false
+        }
+        showLogoutDialog(isSuccessClearSharedPref)
+    }
+
+    private fun showLogoutDialog(isSuccess: Boolean){
+        if (isSuccess){
+            logoutDialog()
+        } else {
+            generalErrorDialog()
+        }
+    }
+
+    private fun logoutDialog(){
+        val alertDialog = AlertDialog.Builder(requireContext())
+
+        alertDialog.apply {
+            setTitle("Log Out")
+            setMessage("Are you sure you want to log out?")
+            setPositiveButton("Yes") { dialog, whichButton ->
+                dialog.dismiss()
+                findNavController().popBackStack()
+            }
+            setNegativeButton("No") { dialog, whichButton ->
+                dialog.dismiss()
+            }
+        }.create().show()
+    }
+
+    private fun generalErrorDialog(){
+        val alertDialog = AlertDialog.Builder(requireContext())
+        alertDialog.apply {
+            setTitle("Error")
+            setMessage("Oops something went wrong, please try again")
+            setPositiveButton("Yes") { dialog, whichButton ->
+                dialog.dismiss()
+            }
+        }.create().show()
     }
 
     private fun FragmentUnsplashBinding.bindState(
