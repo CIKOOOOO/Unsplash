@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
+import com.unsplash.utils.DialogUtil
 import com.unsplash.utils.SharedPreferenceUtil
 import com.unsplash.utils.UserInteractionListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -111,17 +112,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showGeneralErrorDialog(errorMessage: String) {
-        try {
-            val alertDialog = AlertDialog.Builder(this)
-            alertDialog.apply {
-                setMessage(errorMessage)
-                setPositiveButton("Ok") { dialog, whichButton ->
-                    dialog.dismiss()
-                }
-            }.create().show()
-        } catch (e: Exception) {
-
-        }
+        DialogUtil().showOneButtonDialog(this,errorMessage)
+//        try {
+//            val alertDialog = AlertDialog.Builder(this)
+//            alertDialog.apply {
+//                setMessage(errorMessage)
+//                setPositiveButton("Ok") { dialog, whichButton ->
+//                    dialog.dismiss()
+//                }
+//            }.create().show()
+//        } catch (e: Exception) {
+//
+//        }
     }
 
     fun showLoadingBar(){

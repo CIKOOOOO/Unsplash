@@ -20,6 +20,8 @@ import com.unsplash.utils.SharedPreferenceUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
+import androidx.appcompat.app.AppCompatActivity
+import com.unsplash.utils.DialogUtil
 
 
 @AndroidEntryPoint
@@ -52,17 +54,10 @@ class LoginFragment : Fragment() {
             if(!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password)) {
                 login(userName, password)
             } else {
-                Toast.makeText(requireActivity(),"Username atau Password tidak boleh kosong"
+                Toast.makeText(requireActivity(),"Username or password can't be empty."
                     ,Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        var sharedPref = sharedPref.getString("token","tidak ada token")
-        Log.d("GLG sharedpref login",sharedPref.toString())
-
     }
 
     private fun login(userName: String, password: String){
@@ -85,10 +80,7 @@ class LoginFragment : Fragment() {
                 goToListPage()
             } else {
                 (activity as MainActivity?)?.hideLoadingBar()
-                AlertDialog.Builder(requireActivity()).setTitle("Error")
-                    .setMessage(status)
-                    .setPositiveButton(android.R.string.ok) { _, _ -> }
-                    .setIcon(android.R.drawable.ic_dialog_alert).show()
+                DialogUtil().showOneButtonDialog(requireActivity(),status)
             }
 
         }
@@ -98,6 +90,16 @@ class LoginFragment : Fragment() {
     fun goToListPage() {
         val action = LoginFragmentDirections.actionLoginFragmentToUnsplashFragment()
         findNavController().navigate(action)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 
 }

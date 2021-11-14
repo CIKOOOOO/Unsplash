@@ -2,11 +2,15 @@ package com.unsplash.ui
 
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,6 +24,7 @@ import com.unsplash.MainActivity
 import com.unsplash.R
 import com.unsplash.databinding.FragmentUnsplashBinding
 import com.unsplash.model.Unsplash
+import com.unsplash.utils.DialogUtil
 import com.unsplash.utils.SharedPreferenceUtil
 import com.unsplash.utils.UserInteractionListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +37,7 @@ class UnsplashFragment : Fragment(), UserInteractionListener {
 
     private lateinit var binding: FragmentUnsplashBinding
     private val viewModel: UnsplashViewModel by viewModels()
+    private lateinit var ivLogout: ImageView
 
     @Inject
     lateinit var sharedPref: SharedPreferenceUtil
@@ -61,6 +67,9 @@ class UnsplashFragment : Fragment(), UserInteractionListener {
         decorator = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         binding.rvUnsplash.addItemDecoration(decorator)
         binding.rvUnsplash.layoutManager = LinearLayoutManager(requireContext())
+        binding.toolbar.ivLogout.setOnClickListener {
+            logout()
+        }
 
         binding.bindState(
             uiState = viewModel.state,
@@ -78,34 +87,16 @@ class UnsplashFragment : Fragment(), UserInteractionListener {
     private fun logout() {
         try {
             sharedPref.clearPref()
+            showLogoutDialog()
         } catch (e: Exception) {
-            isSuccessClearSharedPref = false
-        }
-        showLogoutDialog(isSuccessClearSharedPref)
-    }
-
-    private fun showLogoutDialog(isSuccess: Boolean) {
-        if (isSuccess) {
-            logoutDialog()
-        } else {
             generalErrorDialog()
         }
     }
 
-    private fun logoutDialog() {
-        val alertDialog = AlertDialog.Builder(requireContext())
-
-        alertDialog.apply {
-            setTitle("Log Out")
-            setMessage("Are you sure you want to log out?")
-            setPositiveButton("Yes") { dialog, whichButton ->
-                dialog.dismiss()
-                findNavController().popBackStack(R.id.loginFragment,false)
-            }
-            setNegativeButton("No") { dialog, whichButton ->
-                dialog.dismiss()
-            }
-        }.create().show()
+    private fun showLogoutDialog() {
+        DialogUtil().showTwoButtonDialog(requireActivity(),"Are you sure want to logout?",
+            "No", {  },"Yes", {
+                findNavController().popBackStack(R.id.loginFragment,false) })
     }
 
     private fun generalErrorDialog() {
@@ -178,16 +169,20 @@ class UnsplashFragment : Fragment(), UserInteractionListener {
     }
 
     override fun onUserInteraction() {
+        (activity as MainActivity?)?.cancelSessionTimer()
         (activity as MainActivity?)?.startSessionTimer()
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+        (activity as MainActivity?)?.cancelSessionTimer()
         (activity as MainActivity?)?.startSessionTimer()
     }
 
     override fun onStop() {
         super.onStop()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
         (activity as MainActivity?)?.cancelSessionTimer()
     }
 

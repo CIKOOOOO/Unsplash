@@ -6,10 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".ui.UnsplashFragment">
 
+    <FrameLayout
+        android:id="@+id/fl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/custom_toolbar" />
+    </FrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_unsplash"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/fl_toolbar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

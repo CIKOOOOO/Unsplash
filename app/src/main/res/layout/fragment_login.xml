@@ -6,14 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".ui.LoginFragment">
 
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside"
+        android:src="@drawable/unsplashlogo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.15" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_username"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="200dp"
         android:hint="Username"
         app:boxBackgroundColor="@android:color/transparent"
         android:background="@android:color/transparent"
-        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintVertical_bias="0.35"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,10 +34,10 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tet_username"
-            android:gravity="center"
+            android:textSize="16sp"
             android:text="demo@demo.com"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -33,6 +46,7 @@
         android:layout_height="wrap_content"
         android:hint="Password"
         android:layout_marginTop="4dp"
+        app:passwordToggleEnabled="true"
         app:boxBackgroundColor="@android:color/transparent"
         android:background="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,21 +56,23 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tet_password"
             android:text="demo123"
+            android:textSize="16sp"
             android:inputType="textPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"/>
+            android:layout_height="wrap_content"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/bt_login"
+        android:background="@drawable/bg_button_dialog"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
+        android:minWidth="140dp"
         android:text="Login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/til_password" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
