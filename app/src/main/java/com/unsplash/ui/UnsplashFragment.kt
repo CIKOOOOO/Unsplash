@@ -1,6 +1,7 @@
 package com.unsplash.ui
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,17 +16,19 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.unsplash.MainActivity
 import com.unsplash.R
 import com.unsplash.databinding.FragmentUnsplashBinding
 import com.unsplash.model.Unsplash
 import com.unsplash.utils.SharedPreferenceUtil
+import com.unsplash.utils.UserInteractionListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UnsplashFragment : Fragment() {
+class UnsplashFragment : Fragment(), UserInteractionListener {
 
     private lateinit var binding: FragmentUnsplashBinding
     private val viewModel: UnsplashViewModel by viewModels()
@@ -52,6 +55,7 @@ class UnsplashFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentUnsplashBinding.inflate(inflater, container, false)
 
+        inituserInteraction()
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         decorator = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
@@ -65,6 +69,10 @@ class UnsplashFragment : Fragment() {
         )
 
         return binding.root
+    }
+
+    private fun inituserInteraction(){
+        (activity as MainActivity?)?.setUInteractionListener(this)
     }
 
     private fun logout() {
@@ -92,7 +100,7 @@ class UnsplashFragment : Fragment() {
             setMessage("Are you sure you want to log out?")
             setPositiveButton("Yes") { dialog, whichButton ->
                 dialog.dismiss()
-                findNavController().popBackStack()
+                findNavController().popBackStack(R.id.loginFragment,false)
             }
             setNegativeButton("No") { dialog, whichButton ->
                 dialog.dismiss()
@@ -168,4 +176,19 @@ class UnsplashFragment : Fragment() {
         }
 
     }
+
+    override fun onUserInteraction() {
+        (activity as MainActivity?)?.startSessionTimer()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (activity as MainActivity?)?.startSessionTimer()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        (activity as MainActivity?)?.cancelSessionTimer()
+    }
+
 }

@@ -12,6 +12,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.unsplash.MainActivity
 import com.unsplash.R
 import com.unsplash.databinding.FragmentLoginBinding
 import com.unsplash.databinding.FragmentUnsplashBinding
@@ -77,11 +78,13 @@ class LoginFragment : Fragment() {
 
         val coroutineScope = CoroutineScope(mainActivityJob + Dispatchers.Main)
         coroutineScope.launch() {
-
+            (activity as MainActivity?)?.showLoadingBar()
             val status = loginViewModel.login(userName,password)
             if (status == "success") {
+                (activity as MainActivity?)?.hideLoadingBar()
                 goToListPage()
             } else {
+                (activity as MainActivity?)?.hideLoadingBar()
                 AlertDialog.Builder(requireActivity()).setTitle("Error")
                     .setMessage(status)
                     .setPositiveButton(android.R.string.ok) { _, _ -> }
