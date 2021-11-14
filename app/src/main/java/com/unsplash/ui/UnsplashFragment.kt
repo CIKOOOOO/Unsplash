@@ -30,11 +30,20 @@ class UnsplashFragment : Fragment() {
     private lateinit var binding: FragmentUnsplashBinding
     private val viewModel: UnsplashViewModel by viewModels()
 
-    @Inject lateinit var sharedPref: SharedPreferenceUtil
+    @Inject
+    lateinit var sharedPref: SharedPreferenceUtil
 
     private lateinit var decorator: DividerItemDecoration
 
-    private var isSuccessClearSharedPref = true;
+    private var isSuccessClearSharedPref = true
+
+    val callback: OnBackPressedCallback =
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Handle the back button event
+                logout()
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,15 +52,7 @@ class UnsplashFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentUnsplashBinding.inflate(inflater, container, false)
 
-
-        requireActivity().onBackPressedDispatcher.addCallback(
-            requireActivity(),
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    logout()
-                }
-            }
-        )
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         decorator = DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         binding.rvUnsplash.addItemDecoration(decorator)
@@ -66,24 +67,24 @@ class UnsplashFragment : Fragment() {
         return binding.root
     }
 
-    private fun logout(){
+    private fun logout() {
         try {
             sharedPref.clearPref()
-        } catch (e: Exception){
+        } catch (e: Exception) {
             isSuccessClearSharedPref = false
         }
         showLogoutDialog(isSuccessClearSharedPref)
     }
 
-    private fun showLogoutDialog(isSuccess: Boolean){
-        if (isSuccess){
+    private fun showLogoutDialog(isSuccess: Boolean) {
+        if (isSuccess) {
             logoutDialog()
         } else {
             generalErrorDialog()
         }
     }
 
-    private fun logoutDialog(){
+    private fun logoutDialog() {
         val alertDialog = AlertDialog.Builder(requireContext())
 
         alertDialog.apply {
@@ -99,7 +100,7 @@ class UnsplashFragment : Fragment() {
         }.create().show()
     }
 
-    private fun generalErrorDialog(){
+    private fun generalErrorDialog() {
         val alertDialog = AlertDialog.Builder(requireContext())
         alertDialog.apply {
             setTitle("Error")
