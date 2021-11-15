@@ -6,8 +6,10 @@ import retrofit2.http.*
 
 interface ApiService {
 
-    @GET("search/photos?client_id=${CLIENT_ID}&query=office")
+    @Headers("Authorization: Client-ID v4jsKEPplqfF6yUQSk84j0eY4Bn6mpnbiZlpXhXQ1h0")
+    @GET("search/photos")
     suspend fun searchPhotos(
+        @Query("query") query: String,
         @Query("page") page: Int,
         @Query("per_page") per_page: Int
     ): SplashSearchResponse

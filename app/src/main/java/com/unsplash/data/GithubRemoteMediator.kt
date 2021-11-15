@@ -55,7 +55,7 @@ class GithubRemoteMediator @Inject constructor(
         val apiQuery = query + IN_QUALIFIER
 
         try {
-            val apiResponse = service.searchPhotos(page, state.config.pageSize)
+            val apiResponse = service.searchPhotos(query,page, state.config.pageSize)
 
             val repos = apiResponse.resultList
             val endOfPaginationReached = repos.isEmpty()

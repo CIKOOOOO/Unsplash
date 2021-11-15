@@ -96,4 +96,4 @@ private const val LAST_SEARCH_QUERY: String = "last_search_query"
 
 // This is outside the ViewModel class, but in the same file
 private const val LAST_QUERY_SCROLLED: String = "last_query_scrolled"
-private const val DEFAULT_QUERY = "Android"
+private const val DEFAULT_QUERY = "Office"

@@ -1,9 +1,11 @@
 package com.unsplash.ui
 
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.unsplash.R
 import com.unsplash.MainActivity
+import com.unsplash.databinding.ActivityMainBinding
 import com.unsplash.databinding.FragmentUnsplashBinding
 import com.unsplash.model.Unsplash
 import com.unsplash.navigation.Navigate
@@ -121,6 +125,11 @@ class UnsplashFragment : Fragment(), Navigate, UserInteractionListener {
         val repoAdapter = UnsplashAdapter(this@UnsplashFragment)
         rvUnsplash.adapter = repoAdapter
 
+        bindSearch(
+            uiState = uiState,
+            onQueryChanged = uiActions
+        )
+
         bindList(
             repoAdapter = repoAdapter,
             uiState = uiState,
@@ -141,22 +150,21 @@ class UnsplashFragment : Fragment(), Navigate, UserInteractionListener {
             }
         })
 //
-//        val notLoading = repoAdapter.loadStateFlow
-//            // Only emit when REFRESH LoadState for the paging source changes.
-//            .distinctUntilChangedBy { it.source.refresh }
-//            // Only react to cases where REFRESH completes i.e., NotLoading.
-//            .map { it.source.refresh is LoadState.NotLoading }
-//
-//        val hasNotScrolledForCurrentSearch = uiState
-//            .map { it.hasNotScrolledForCurrentSearch }
-//            .distinctUntilChanged()
+        val notLoading = repoAdapter.loadStateFlow
+            // Only emit when REFRESH LoadState for the paging source changes.
+            .distinctUntilChangedBy { it.source.refresh }
+            // Only react to cases where REFRESH completes i.e., NotLoading.
+            .map { it.source.refresh is LoadState.NotLoading }
 
-// ini buat error.
-//        val shouldScrollToTop = combine(
-//            notLoading,
-//            hasNotScrolledForCurrentSearch,
-//            Boolean::and
-//        ).distinctUntilChanged()
+        val hasNotScrolledForCurrentSearch = uiState
+            .map { it.hasNotScrolledForCurrentSearch }
+            .distinctUntilChanged()
+
+        val shouldScrollToTop = combine(
+            notLoading,
+            hasNotScrolledForCurrentSearch,
+            Boolean::and
+        ).distinctUntilChanged()
 
         lifecycleScope.launch {
             pagingData.collectLatest(repoAdapter::submitData)
@@ -164,11 +172,49 @@ class UnsplashFragment : Fragment(), Navigate, UserInteractionListener {
 
         lifecycleScope.launch {
             rvUnsplash.scrollToPosition(0)
-//            shouldScrollToTop.collect { shouldScroll ->
-//                if (shouldScroll) rvUnsplash.scrollToPosition(0)
-//            }
+            shouldScrollToTop.collect { shouldScroll ->
+                if (shouldScroll) rvUnsplash.scrollToPosition(0)
+            }
         }
 
+    }
+
+    private fun FragmentUnsplashBinding.bindSearch(
+        uiState: StateFlow<UiState>,
+        onQueryChanged: (UiAction.Search) -> Unit
+    ) {
+        binding.searchBar.etSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                updateRepoListFromInput(onQueryChanged)
+                true
+            } else {
+                false
+            }
+        }
+        binding.searchBar.etSearch.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                updateRepoListFromInput(onQueryChanged)
+                true
+            } else {
+                false
+            }
+        }
+
+        lifecycleScope.launch {
+            uiState
+                .map { it.query }
+                .distinctUntilChanged()
+                .collect(binding.searchBar.etSearch::setText)
+        }
+    }
+
+    private fun FragmentUnsplashBinding.updateRepoListFromInput(onQueryChanged: (UiAction.Search) -> Unit) {
+        binding.searchBar.etSearch.text.trim().let {
+            if (it.isNotEmpty()) {
+                rvUnsplash.scrollToPosition(0)
+                onQueryChanged(UiAction.Search(query = it.toString()))
+            }
+        }
     }
 
     override fun navigate(unsplash: Unsplash) {

@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun initTimer() : CountDownTimer {
-        val timer = object : CountDownTimer(15000, 1000) {
+        val timer = object : CountDownTimer(30000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
 
             }

@@ -17,10 +17,23 @@
             layout="@layout/custom_toolbar" />
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/fl_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp">
+
+        <include
+            android:id="@+id/search_bar"
+            layout="@layout/layout_searchbar" />
+    </FrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_unsplash"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/fl_search"
         app:layout_constraintTop_toBottomOf="@id/fl_toolbar" />
 </androidx.constraintlayout.widget.ConstraintLayout>
