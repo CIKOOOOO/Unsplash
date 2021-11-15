@@ -94,8 +94,9 @@ class UnsplashFragment : Fragment(), UserInteractionListener {
     }
 
     private fun showLogoutDialog() {
+        (activity as MainActivity?)?.cancelSessionTimer()
         DialogUtil().showTwoButtonDialog(requireActivity(),"Are you sure want to logout?",
-            "No", {  },"Yes", {
+            "No", {  (activity as MainActivity?)?.startSessionTimer() },"Yes", {
                 findNavController().popBackStack(R.id.loginFragment,false) })
     }
 
