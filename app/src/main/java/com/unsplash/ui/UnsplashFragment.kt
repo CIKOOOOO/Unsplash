@@ -1,8 +1,6 @@
 package com.unsplash.ui
 
 import android.os.Bundle
-import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +8,11 @@ import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.unsplash.R
 import com.unsplash.MainActivity
-import com.unsplash.R
 import com.unsplash.databinding.FragmentUnsplashBinding
 import com.unsplash.model.Unsplash
 import com.unsplash.navigation.Navigate
@@ -38,8 +33,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UnsplashFragment : Fragment(), Navigate {
-class UnsplashFragment : Fragment(), UserInteractionListener {
+class UnsplashFragment : Fragment(), Navigate, UserInteractionListener {
 
     private lateinit var binding: FragmentUnsplashBinding
 
@@ -87,7 +81,7 @@ class UnsplashFragment : Fragment(), UserInteractionListener {
         return binding.root
     }
 
-    private fun inituserInteraction(){
+    private fun inituserInteraction() {
         (activity as MainActivity?)?.setUInteractionListener(this)
     }
 
@@ -102,9 +96,10 @@ class UnsplashFragment : Fragment(), UserInteractionListener {
 
     private fun showLogoutDialog() {
         (activity as MainActivity?)?.cancelSessionTimer()
-        DialogUtil().showTwoButtonDialog(requireActivity(),"Are you sure want to logout?",
-            "No", {  (activity as MainActivity?)?.startSessionTimer() },"Yes", {
-                findNavController().popBackStack(R.id.loginFragment,false) })
+        DialogUtil().showTwoButtonDialog(requireActivity(), "Are you sure want to logout?",
+            "No", { (activity as MainActivity?)?.startSessionTimer() }, "Yes", {
+                findNavController().popBackStack(R.id.loginFragment, false)
+            })
     }
 
     private fun generalErrorDialog() {
