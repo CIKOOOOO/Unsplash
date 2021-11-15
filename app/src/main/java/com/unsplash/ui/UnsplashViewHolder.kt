@@ -11,8 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.unsplash.R
 import com.unsplash.model.Unsplash
+import com.unsplash.navigation.Navigate
+import javax.inject.Inject
 
-class UnsplashViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class UnsplashViewHolder(view: View, navigate: Navigate) :
+    RecyclerView.ViewHolder(view) {
     private val name: TextView = view.findViewById(R.id.tv_name)
     private val image: ImageView = view.findViewById(R.id.iv_unsplash)
 
@@ -20,7 +23,7 @@ class UnsplashViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     init {
         view.setOnClickListener {
-            Toast.makeText(view.context, "piuw", Toast.LENGTH_SHORT).show()
+            navigate.navigate(unsplash!!)
         }
     }
 
@@ -43,10 +46,10 @@ class UnsplashViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     companion object {
-        fun create(parent: ViewGroup): UnsplashViewHolder {
+        fun create(parent: ViewGroup, navigate: Navigate): UnsplashViewHolder {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.recycler_unsplash, parent, false)
-            return UnsplashViewHolder(view)
+            return UnsplashViewHolder(view, navigate)
         }
     }
 }

@@ -11,6 +11,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,10 +21,14 @@ import androidx.paging.PagingData
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.unsplash.R
 import com.unsplash.MainActivity
 import com.unsplash.R
 import com.unsplash.databinding.FragmentUnsplashBinding
 import com.unsplash.model.Unsplash
+import com.unsplash.navigation.Navigate
+import com.unsplash.ui.detail.UnsplashDetailFragment
 import com.unsplash.utils.DialogUtil
 import com.unsplash.utils.SharedPreferenceUtil
 import com.unsplash.utils.UserInteractionListener
@@ -33,9 +38,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
+class UnsplashFragment : Fragment(), Navigate {
 class UnsplashFragment : Fragment(), UserInteractionListener {
 
     private lateinit var binding: FragmentUnsplashBinding
+
     private val viewModel: UnsplashViewModel by viewModels()
     private lateinit var ivLogout: ImageView
 
@@ -116,7 +123,7 @@ class UnsplashFragment : Fragment(), UserInteractionListener {
         pagingData: Flow<PagingData<Unsplash>>,
         uiActions: (UiAction) -> Unit
     ) {
-        val repoAdapter = UnsplashAdapter()
+        val repoAdapter = UnsplashAdapter(this@UnsplashFragment)
         rvUnsplash.adapter = repoAdapter
 
         bindList(
@@ -138,16 +145,16 @@ class UnsplashFragment : Fragment(), UserInteractionListener {
                 if (dy != 0) onScrollChanged(UiAction.Scroll(currentQuery = uiState.value.query))
             }
         })
-
-        val notLoading = repoAdapter.loadStateFlow
-            // Only emit when REFRESH LoadState for the paging source changes.
-            .distinctUntilChangedBy { it.source.refresh }
-            // Only react to cases where REFRESH completes i.e., NotLoading.
-            .map { it.source.refresh is LoadState.NotLoading }
-
-        val hasNotScrolledForCurrentSearch = uiState
-            .map { it.hasNotScrolledForCurrentSearch }
-            .distinctUntilChanged()
+//
+//        val notLoading = repoAdapter.loadStateFlow
+//            // Only emit when REFRESH LoadState for the paging source changes.
+//            .distinctUntilChangedBy { it.source.refresh }
+//            // Only react to cases where REFRESH completes i.e., NotLoading.
+//            .map { it.source.refresh is LoadState.NotLoading }
+//
+//        val hasNotScrolledForCurrentSearch = uiState
+//            .map { it.hasNotScrolledForCurrentSearch }
+//            .distinctUntilChanged()
 
 // ini buat error.
 //        val shouldScrollToTop = combine(
@@ -167,6 +174,15 @@ class UnsplashFragment : Fragment(), UserInteractionListener {
 //            }
         }
 
+    }
+
+    override fun navigate(unsplash: Unsplash) {
+        val gson = Gson()
+        val data = gson.toJson(unsplash)
+
+        val myBundle = bundleOf(UnsplashDetailFragment.DATA to data)
+
+        findNavController().navigate(R.id.unsplashDetailFragment, myBundle)
     }
 
     override fun onUserInteraction() {

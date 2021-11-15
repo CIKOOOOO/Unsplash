@@ -62,7 +62,13 @@ class GithubRemoteMediator @Inject constructor(
             val unsplashDb: MutableList<Unsplash> = ArrayList()
 
             for (data in repos) {
-                val repo = Unsplash(data.id, data.user.name, data.url.picture)
+                val datas = if(data.description == null){
+                     "No description"
+                }else{
+                    data.description
+                }
+                val repo =
+                    Unsplash(data.id, data.user.name, data.url.picture, datas)
                 unsplashDb.add(repo)
             }
 
@@ -79,16 +85,11 @@ class GithubRemoteMediator @Inject constructor(
                 }
                 repoDatabase.remoteKeysDao().insertAll(keys)
                 repoDatabase.unsplashDao().insertAll(unsplashDb)
-
-//                val ss = repoDatabase.unsplashDao().selectAll()
-//                Log.e("asd","${ss.}")
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (exception: IOException) {
-            Log.e("asd", "2")
             return MediatorResult.Error(exception)
         } catch (exception: HttpException) {
-            Log.e("asd", "3")
             return MediatorResult.Error(exception)
         }
     }

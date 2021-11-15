@@ -19,4 +19,14 @@
             android:id="@+id/action_loginFragment_to_unsplashFragment"
             app:destination="@id/unsplashFragment" />
     </fragment>
+        android:label="fragment_unsplash">
+        <action
+            android:id="@+id/action_unsplashFragment_to_unsplashDetailFragment"
+            app:destination="@id/unsplashDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/unsplashDetailFragment"
+        android:name="com.unsplash.ui.detail.UnsplashDetailFragment"
+        android:label="fragment_unsplash_detail"
+        tools:layout="@layout/fragment_unsplash_detail" />
 </navigation>
