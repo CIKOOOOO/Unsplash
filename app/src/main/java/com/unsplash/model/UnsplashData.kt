@@ -6,7 +6,8 @@ import com.google.gson.annotations.SerializedName
 data class UnsplashData(
     @SerializedName("id") val id: String,
     @SerializedName("urls") val url: Url,
-    @SerializedName("user") val user: User
+    @SerializedName("user") val user: User,
+    @SerializedName("alt_description") val description: String = ""
 )
 
 data class Url(
