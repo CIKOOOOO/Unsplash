@@ -1,21 +1,14 @@
 package com.unsplash.ui.detail
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-import com.unsplash.MainActivity
-import com.unsplash.R
-import com.unsplash.databinding.FragmentUnsplashBinding
 import com.unsplash.databinding.FragmentUnsplashDetailBinding
 import com.unsplash.model.Unsplash
 import com.unsplash.ui.BaseFragment
-import com.unsplash.utils.UserInteractionListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,10 +43,14 @@ class UnsplashDetailFragment : BaseFragment() {
 
             tvNameDetail.text = unsplash.name
             tvDescriptionDetail.text = unsplash.description
+
+            tvThumbs.text = "${unsplash.likes}"
+            tvInstagramUserDetail.text = "User: ${unsplash.twitterUsername}"
+            tvTotalPhotos.text = "Total Photos: ${unsplash.totalPhotos}"
         }
     }
 
-    companion object{
+    companion object {
         val DATA = "data"
     }
 

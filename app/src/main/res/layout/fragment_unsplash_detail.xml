@@ -24,6 +24,50 @@
         android:scaleType="centerCrop"
         app:layout_constraintTop_toBottomOf="@id/fl_toolbar" />
 
+    <ImageView
+        android:id="@+id/iv_like"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_like"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_detail" />
+
+    <TextView
+        android:id="@+id/tv_thumbs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/iv_like"
+        app:layout_constraintStart_toEndOf="@id/iv_like"
+        app:layout_constraintTop_toBottomOf="@id/iv_detail" />
+
+    <TextView
+        android:id="@+id/tv_total_photos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_detail" />
+
+    <TextView
+        android:id="@+id/tv_instagram_user_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/iv_like"
+        app:layout_constraintTop_toBottomOf="@id/tv_thumbs" />
+
     <TextView
         android:id="@+id/tv_name_detail"
         android:layout_width="wrap_content"
@@ -31,9 +75,8 @@
         android:layout_marginTop="10dp"
         android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_detail" />
+        app:layout_constraintStart_toStartOf="@id/iv_like"
+        app:layout_constraintTop_toBottomOf="@id/tv_instagram_user_detail" />
 
     <TextView
         android:id="@+id/tv_description_detail"

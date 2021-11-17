@@ -11,6 +11,8 @@ import com.unsplash.db.RemoteKeys
 import com.unsplash.db.UnsplashDatabase
 import com.unsplash.di.NetworkModule.IN_QUALIFIER
 import com.unsplash.model.Unsplash
+import com.unsplash.model.Url
+import com.unsplash.model.User
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -55,20 +57,22 @@ class GithubRemoteMediator @Inject constructor(
         val apiQuery = query + IN_QUALIFIER
 
         try {
-            val apiResponse = service.searchPhotos(query,page, state.config.pageSize)
+            val apiResponse = service.searchPhotos(query, page, state.config.pageSize)
 
             val repos = apiResponse.resultList
             val endOfPaginationReached = repos.isEmpty()
             val unsplashDb: MutableList<Unsplash> = ArrayList()
 
             for (data in repos) {
-                val datas = if(data.description == null){
-                     "No description"
-                }else{
-                    data.description
-                }
+                val user: User = data.user
+                val url: Url = data.url
                 val repo =
-                    Unsplash(data.id, data.user.name, data.url.picture, datas)
+                    Unsplash(
+                        data.id, user.name, url.picture,
+                        data.description ?: "No description",
+                        data.likes, data.likeByUser, user.twitterUsername ?: "-",
+                        user.totalPhotos
+                    )
                 unsplashDb.add(repo)
             }
 
