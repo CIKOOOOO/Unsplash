@@ -21,14 +21,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.unsplash.utils.DialogUtil
-
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
-    private val loginViewModel : LoginViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels()
 
     @Inject
     lateinit var sharedPref: SharedPreferenceUtil
@@ -38,7 +38,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentLoginBinding.inflate(inflater,container,false)
+        binding = FragmentLoginBinding.inflate(inflater, container, false)
         // Inflate the layout for this fragment
 
         return binding.root
@@ -51,16 +51,17 @@ class LoginFragment : Fragment() {
 
             val userName = binding.tetUsername.text.toString()
             val password = binding.tetPassword.text.toString()
-            if(!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password)) {
+            if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password)) {
                 login(userName, password)
             } else {
-                Toast.makeText(requireActivity(),"Username or password can't be empty."
-                    ,Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireActivity(), "Username or password can't be empty.", Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
-    private fun login(userName: String, password: String){
+    private fun login(userName: String, password: String) {
         val mainActivityJob = Job()
 
         val errorHandler = CoroutineExceptionHandler { _, exception ->
@@ -71,18 +72,16 @@ class LoginFragment : Fragment() {
             Log.d("GLG", "error" + exception.message)
         }
 
-        val coroutineScope = CoroutineScope(mainActivityJob + Dispatchers.Main)
-        coroutineScope.launch() {
+        lifecycleScope.launch {
             (activity as MainActivity?)?.showLoadingBar()
-            val status = loginViewModel.login(userName,password)
+            val status = loginViewModel.login(userName, password)
             if (status == "success") {
                 (activity as MainActivity?)?.hideLoadingBar()
                 goToListPage()
             } else {
                 (activity as MainActivity?)?.hideLoadingBar()
-                DialogUtil().showOneButtonDialog(requireActivity(),status)
+                DialogUtil().showOneButtonDialog(requireActivity(), status)
             }
-
         }
 
     }
@@ -92,14 +91,5 @@ class LoginFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-    }
 
 }

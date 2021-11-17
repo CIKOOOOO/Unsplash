@@ -87,7 +87,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun sessionExpiredLogout(){
-        Log.d("GLG","Logout")
         try {
             sharedPref.clearPref()
         } catch (e: Exception) {

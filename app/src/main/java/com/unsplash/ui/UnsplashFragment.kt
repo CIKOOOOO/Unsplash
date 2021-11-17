@@ -37,7 +37,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class UnsplashFragment : Fragment(), Navigate, UserInteractionListener {
+class UnsplashFragment : BaseFragment(), Navigate {
 
     private lateinit var binding: FragmentUnsplashBinding
 
@@ -91,7 +91,6 @@ class UnsplashFragment : Fragment(), Navigate, UserInteractionListener {
 
     private fun logout() {
         try {
-            sharedPref.clearPref()
             showLogoutDialog()
         } catch (e: Exception) {
             generalErrorDialog()
@@ -102,6 +101,7 @@ class UnsplashFragment : Fragment(), Navigate, UserInteractionListener {
         (activity as MainActivity?)?.cancelSessionTimer()
         DialogUtil().showTwoButtonDialog(requireActivity(), "Are you sure want to logout?",
             "No", { (activity as MainActivity?)?.startSessionTimer() }, "Yes", {
+                sharedPref.clearPref()
                 findNavController().popBackStack(R.id.loginFragment, false)
             })
     }
@@ -224,24 +224,6 @@ class UnsplashFragment : Fragment(), Navigate, UserInteractionListener {
         val myBundle = bundleOf(UnsplashDetailFragment.DATA to data)
 
         findNavController().navigate(R.id.unsplashDetailFragment, myBundle)
-    }
-
-    override fun onUserInteraction() {
-        (activity as MainActivity?)?.cancelSessionTimer()
-        (activity as MainActivity?)?.startSessionTimer()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-        (activity as MainActivity?)?.cancelSessionTimer()
-        (activity as MainActivity?)?.startSessionTimer()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-        (activity as MainActivity?)?.cancelSessionTimer()
     }
 
 }

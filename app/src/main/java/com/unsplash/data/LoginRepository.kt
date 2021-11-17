@@ -31,6 +31,7 @@ class LoginRepository @Inject constructor(
             return when (response.code()) {
                 200 -> {
                     val loginResponse = response.body()
+                    Log.d("GLG", response.body().toString())
                     if (loginResponse != null) {
                         encryptAndSaveToken(loginResponse.token)
                     }
